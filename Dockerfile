@@ -23,7 +23,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ENV USER=root
 
-RUN apt-get update && apt-get install -y --no-install-recommends ubuntu-desktop && apt-get install -y gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal && apt-get install -y tightvncserver && mkdir /root/.vnc
+RUN apt-get update && apt-get install -y --no-install-recommends ubuntu-desktop && apt-get install -y gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal && apt-get install -y tightvncserver && apt-get install -y expect && mkdir /root/.vnc
 
 
 #Update the package manager and upgrade the system
@@ -31,7 +31,18 @@ RUN apt-get update && \
 apt-get upgrade -y && \
 apt-get update
 
-ADD https://github.com/Lvious/Dockerfile-Ubuntu-Gnome/blob/master/xstartup /root/.vnc/xstartup
+ADD https://raw.githubusercontent.com/Lvious/Dockerfile-Ubuntu-Gnome/master/xstartup /root/.vnc/xstartup
+
+ADD https://raw.githubusercontent.com/Lvious/Dockerfile-Ubuntu-Gnome/master/spawn-desktop.sh /usr/local/etc/spawn-desktop.sh
+
+RUN 
+
+ADD https://raw.githubusercontent.com/Lvious/Dockerfile-Ubuntu-Gnome/master/start-vnc-expect-script.sh /usr/local/etc/start-vnc-expect-script.sh
+
+RUN chmod 755 /root/.vnc/xstartup && chmod +x /usr/local/etc/start-vnc-expect-script.sh && chmod +x /usr/local/etc/spawn-desktop.sh
+
+
+CMD bash -C '/usr/local/etc/spawn-desktop.sh';'bash'
 
 # Expose ports.
 EXPOSE 5901/tcp

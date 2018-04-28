@@ -47,10 +47,10 @@ spawn vncpasswd
 match_max 100000
 expect -exact "Using password file /root/.vnc/passwd\r
 Password: "
-send -- "acoman\r"
+send -- "cbd109\r"
 expect -exact "\r
 Verify:   "
-send -- "acoman\r"
+send -- "cbd019\r"
 expect -exact "\r
 Would you like to enter a view-only password (y/n)? "
 send -- "n\r"
