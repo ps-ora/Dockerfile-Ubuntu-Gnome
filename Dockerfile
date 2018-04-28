@@ -8,7 +8,7 @@
 # (c) Pete Birley
 
 # Pull base image.
-FROM dockerfile/ubuntu
+FROM ubuntu:17.04
 
 # Setup enviroment variables
 ENV DEBIAN_FRONTEND noninteractive
@@ -40,7 +40,8 @@ ADD https://raw.githubusercontent.com/CannyComputing/Dockerfile-Ubuntu-Gnome/mas
 RUN chmod +x /usr/local/etc/gnome-keybindings.pl
 
 # Add the script to fix and customise GNOME for docker
-ADD https://raw.githubusercontent.com/CannyComputing/Dockerfile-Ubuntu-Gnome/master/gnome-docker-fix-and-customise.sh /usr/local/etc/gnome-docker-fix-and-customise.sh
+ADD 
+/gnome-docker-fix-and-customise.sh /usr/local/etc/gnome-docker-fix-and-customise.sh
 RUN chmod +x /usr/local/etc/gnome-docker-fix-and-customise.sh
 
 # Set up VNC
