@@ -7,14 +7,14 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
 
 ### Dependencies
 
-* [dockerfile/ubuntu](http://dockerfile.github.io/#/ubuntu)
+* [ubuntu:16.04](https://hub.docker.com/_/ubuntu)
 
 
 ### Installation
 
 1. Install [Docker](https://www.docker.io/).
 
-	For an Ubuntu 14.04 host the following commands will get you up and running:
+	For an Ubuntu 16.04 host the following commands will get you up and running:
 
 	`sudo apt-get -y update && \
 	
@@ -27,12 +27,12 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
 
 2. You can then pull the file:
 
-	`sudo docker pull cannycomputing/dockerfile-ubuntu-gnome`
+	`sudo docker pull Lvious/dockerfile-ubuntu-gnome`
 
 
 	Or alternatively build an image from the Dockerfile:
 
-	`sudo docker build -t="cannycomputing/dockerfile-ubuntu-gnome" github.com/CannyComputing/Dockerfile-Ubuntu-Gnome`
+	`sudo docker build -t="Lvious/dockerfile-ubuntu-gnome" github.com/Lvious/Dockerfile-Ubuntu-Gnome`
 
 
 ### SuperQuick Install
@@ -44,8 +44,8 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
 	sudo apt-get -y install docker.io && \
 	sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker && \
 	sudo restart docker.io && \
-	sudo docker pull cannycomputing/dockerfile-ubuntu-gnome && \
-	sudo docker run -it --rm -p 5901:5901 cannycomputing/dockerfile-ubuntu-gnome
+	sudo docker pull Lvious/dockerfile-ubuntu-gnome && \
+	sudo docker run -it --rm -p 5901:5901 Lvious/dockerfile-ubuntu-gnome
 
 
 ### Usage
@@ -56,11 +56,11 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
 
 * this will run and drop you into a session:
 
-	`sudo docker run -it --rm -p 5901:5901 cannycomputing/dockerfile-ubuntu-gnome`
+	`sudo docker run -it --rm -p 5901:5901 Lvious/dockerfile-ubuntu-gnome`
 
 * or for silent running:
 
-	`sudo docker run -it -d -p 5901:5901 cannycomputing/dockerfile-ubuntu-gnome`
+	`sudo docker run -it -d -p 5901:5901 Lvious/dockerfile-ubuntu-gnome`
 
 #### Connecting to instance
 
