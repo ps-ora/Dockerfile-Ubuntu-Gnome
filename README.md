@@ -16,13 +16,7 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
 
 	For an Ubuntu 16.04 host the following commands will get you up and running:
 
-	`sudo apt-get -y update && \
-	
-	sudo apt-get -y install docker.io && \
-	
-	sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker && \
-	
-	sudo restart docker.io`
+	`#install docker-ce from Docker official site step by step`
 
 
 2. You can then pull the file:
@@ -33,19 +27,6 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
 	Or alternatively build an image from the Dockerfile:
 
 	`sudo docker build -t="Lvious/dockerfile-ubuntu-gnome" github.com/Lvious/Dockerfile-Ubuntu-Gnome`
-
-
-### SuperQuick Install
-
-
-	This will get you going superfast - one line! - from a fresh Ubuntu install (rememebr to update the /etc/hosts file to relect your hostname at 127.0.1.1)
-
-	sudo apt-get -y update && \
-	sudo apt-get -y install docker.io && \
-	sudo ln -sf /usr/bin/docker.io /usr/local/bin/docker && \
-	sudo restart docker.io && \
-	sudo docker pull Lvious/dockerfile-ubuntu-gnome && \
-	sudo docker run -it --rm -p 5901:5901 Lvious/dockerfile-ubuntu-gnome
 
 
 ### Usage
