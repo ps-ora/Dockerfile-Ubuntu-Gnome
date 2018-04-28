@@ -8,7 +8,7 @@
 # (c) Pete Birley
 
 # Pull base image.
-FROM ubuntu:17.04
+FROM ubuntu:14.04
 
 # Setup enviroment variables
 ENV DEBIAN_FRONTEND noninteractive
