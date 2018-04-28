@@ -1,67 +1,37 @@
 #
 # Ubuntu Desktop (Gnome) Dockerfile
 #
-# https://github.com/intlabs/Docker-Ubuntu-Desktop-Gnome
+# https://github.com/Lvious/Docker-Ubuntu-Desktop-Gnome
 #
 
 # Install GNOME3 and VNC server.
-# (c) Pete Birley
+# Lvious
 
 # Pull base image.
 FROM ubuntu:17.04
 
+RUN set -xe && echo '#!/bin/sh' > /usr/sbin/policy-rc.d && echo 'exit 101' >> /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d && dpkg-divert --local --rename --add /sbin/initctl && cp -a /usr/sbin/policy-rc.d /sbin/initctl && sed -i 's/^exit.*/exit 0/' /sbin/initctl && echo 'force-unsafe-io' > /etc/dpkg/dpkg.cfg.d/docker-apt-speedup && echo 'DPkg::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' > /etc/apt/apt.conf.d/docker-clean && echo 'APT::Update::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' >> /etc/apt/apt.conf.d/docker-clean && echo 'Dir::Cache::pkgcache ""; Dir::Cache::srcpkgcache "";' >> /etc/apt/apt.conf.d/docker-clean && echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/docker-no-languages && echo 'Acquire::GzipIndexes "true"; Acquire::CompressionTypes::Order:: "gz";' > /etc/apt/apt.conf.d/docker-gzip-indexes
+
+RUN rm -rf /var/lib/apt/lists/*
+
+RUN sed -i 's/^#\s*\(deb.*universe\)$/\1/g' /etc/apt/sources.list
+	
+CMD ["/bin/bash"]
+
 # Setup enviroment variables
 ENV DEBIAN_FRONTEND noninteractive
+
+ENV USER=root
+
+RUN apt-get update && apt-get install -y --no-install-recommends ubuntu-desktop && apt-get install -y gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal && apt-get install -y tightvncserver && mkdir /root/.vnc
+
 
 #Update the package manager and upgrade the system
 RUN apt-get update && \
 apt-get upgrade -y && \
 apt-get update
 
-# Installing fuse filesystem is not possible in docker without elevated priviliges
-# but we can fake installling it to allow packages we need to install for GNOME
-RUN apt-get install libfuse2 -y && \
-cd /tmp ; apt-get download fuse && \
-cd /tmp ; dpkg-deb -x fuse_* . && \
-cd /tmp ; dpkg-deb -e fuse_* && \
-cd /tmp ; rm fuse_*.deb && \
-cd /tmp ; echo -en '#!/bin/bash\nexit 0\n' > DEBIAN/postinst && \
-cd /tmp ; dpkg-deb -b . /fuse.deb && \
-cd /tmp ; dpkg -i /fuse.deb
-
-# Upstart and DBus have issues inside docker.
-RUN dpkg-divert --local --rename --add /sbin/initctl && ln -sf /bin/true /sbin/initctl
-
-# Install GNOME and tightvnc server.
-RUN apt-get update && apt-get install -y xorg gnome-core gnome-session-fallback tightvncserver
-
-# Pull in the hack to fix keyboard shortcut bindings for GNOME 3 under VNC
-ADD https://github.com/Lvious/Dockerfile-Ubuntu-Gnome/blob/master/gnome-keybindings.pl /usr/local/etc/gnome-keybindings.pl
-RUN chmod +x /usr/local/etc/gnome-keybindings.pl
-
-# Add the script to fix and customise GNOME for docker
-ADD https://github.com/Lvious/Dockerfile-Ubuntu-Gnome/blob/master/gnome-docker-fix-and-customise.sh /usr/local/etc/gnome-docker-fix-and-customise.sh
-RUN chmod +x /usr/local/etc/gnome-docker-fix-and-customise.sh
-
-# Set up VNC
-RUN mkdir -p /root/.vnc
 ADD https://github.com/Lvious/Dockerfile-Ubuntu-Gnome/blob/master/xstartup /root/.vnc/xstartup
-RUN chmod 755 /root/.vnc/xstartup
-ADD https://github.com/Lvious/Dockerfile-Ubuntu-Gnome/blob/master/spawn-desktop.sh /usr/local/etc/spawn-desktop.sh
-RUN chmod +x /usr/local/etc/spawn-desktop.sh
-RUN apt-get install -y expect
-ADD https://github.com/Lvious/Dockerfile-Ubuntu-Gnome/blob/master/start-vnc-expect-script.sh /usr/local/etc/start-vnc-expect-script.sh
-RUN chmod +x /usr/local/etc/start-vnc-expect-script.sh
-ADD https://github.com/Lvious/Dockerfile-Ubuntu-Gnome/blob/master/vnc.conf /etc/vnc.conf
-
-# Define mountable directories.
-VOLUME ["/data"]
-
-# Define working directory.
-WORKDIR /data
-
-# Define default command.
-CMD bash -C '/usr/local/etc/spawn-desktop.sh';'bash'
 
 # Expose ports.
-EXPOSE 5901
+EXPOSE 5901/tcp
