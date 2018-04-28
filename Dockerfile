@@ -64,6 +64,4 @@ WORKDIR /data
 CMD bash -C '/usr/local/etc/spawn-desktop.sh';'bash'
 
 # Expose ports.
-
-
 EXPOSE 5901
