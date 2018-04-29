@@ -35,7 +35,6 @@ ADD https://raw.githubusercontent.com/Lvious/Dockerfile-Ubuntu-Gnome/master/xsta
 
 ADD https://raw.githubusercontent.com/Lvious/Dockerfile-Ubuntu-Gnome/master/spawn-desktop.sh /usr/local/etc/spawn-desktop.sh
 
-RUN 
 
 ADD https://raw.githubusercontent.com/Lvious/Dockerfile-Ubuntu-Gnome/master/start-vnc-expect-script.sh /usr/local/etc/start-vnc-expect-script.sh
 
