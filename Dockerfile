@@ -15,15 +15,19 @@ RUN set -xe && echo '#!/bin/sh' > /usr/sbin/policy-rc.d && echo 'exit 101' >> /u
 RUN rm -rf /var/lib/apt/lists/*
 
 RUN sed -i 's/^#\s*\(deb.*universe\)$/\1/g' /etc/apt/sources.list
-	
-CMD ["/bin/bash"]
+
 
 # Setup enviroment variables
 ENV DEBIAN_FRONTEND noninteractive
 
 ENV USER=root
 
-RUN apt-get update && apt-get install -y --no-install-recommends ubuntu-desktop && apt-get install -y gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal && apt-get install -y tightvncserver && apt-get install -y expect && mkdir /root/.vnc
+
+# Install GNOME and tightvnc server.
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends ubuntu-desktop && \
+  apt-get install -y gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal && \
+  apt-get install -y tightvncserver
 
 
 #Update the package manager and upgrade the system
@@ -31,16 +35,18 @@ RUN apt-get update && \
 apt-get upgrade -y && \
 apt-get update
 
-ADD https://raw.githubusercontent.com/Lvious/Dockerfile-Ubuntu-Gnome/master/xstartup /root/.vnc/xstartup
+# Set up VNC
+RUN mkdir -p /root/.vnc
+COPY xstartup /root/.vnc/xstartup
+RUN chmod 755 /root/.vnc/xstartup
+COPY spawn-desktop.sh /usr/local/etc/spawn-desktop.sh
+RUN chmod +x /usr/local/etc/spawn-desktop.sh
+RUN apt-get install -y expect
+COPY start-vnc-expect-script.sh /usr/local/etc/start-vnc-expect-script.sh
+RUN chmod +x /usr/local/etc/start-vnc-expect-script.sh
+COPY vnc.conf /etc/vnc.conf
 
-ADD https://raw.githubusercontent.com/Lvious/Dockerfile-Ubuntu-Gnome/master/spawn-desktop.sh /usr/local/etc/spawn-desktop.sh
-
-
-ADD https://raw.githubusercontent.com/Lvious/Dockerfile-Ubuntu-Gnome/master/start-vnc-expect-script.sh /usr/local/etc/start-vnc-expect-script.sh
-
-RUN chmod 755 /root/.vnc/xstartup && chmod +x /usr/local/etc/start-vnc-expect-script.sh && chmod +x /usr/local/etc/spawn-desktop.sh
-
-
+# Define default command.
 CMD bash -C '/usr/local/etc/spawn-desktop.sh';'bash'
 
 # Expose ports.
