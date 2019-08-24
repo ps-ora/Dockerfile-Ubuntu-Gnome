@@ -7,26 +7,26 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
 
 ### Dependencies
 
-* [ubuntu:16.04](https://hub.docker.com/_/ubuntu)
+* [ubuntu:19.04](https://hub.docker.com/_/ubuntu)
 
 
 ### Installation
 
 1. Install [Docker](https://www.docker.io/).
 
-	For an Ubuntu 16.04 host the following commands will get you up and running:
+	For an Ubuntu 18.04 host the following commands will get you up and running:
 
 	`#install docker-ce from Docker official site step by step`
 
 
 2. You can then pull the file:
 
-	`sudo docker pull Lvious/dockerfile-ubuntu-gnome`
+	`sudo docker pull darkdragon-001/dockerfile-ubuntu-gnome`
 
 
 	Or alternatively build an image from the Dockerfile:
 
-	`sudo docker build -t="Lvious/dockerfile-ubuntu-gnome" github.com/Lvious/Dockerfile-Ubuntu-Gnome`
+	`sudo docker build -t="darkdragon-001/dockerfile-ubuntu-gnome" github.com/darkdragon-001/Dockerfile-Ubuntu-Gnome`
 
 
 ### Usage
@@ -37,11 +37,11 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
 
 * this will run and drop you into a session:
 
-	`sudo docker run -it --rm -p 5901:5901 Lvious/dockerfile-ubuntu-gnome`
+	`sudo docker run -it --rm -p 5901:5901 darkdragon-001/dockerfile-ubuntu-gnome`
 
 * or for silent running:
 
-	`sudo docker run -it -d -p 5901:5901 Lvious/dockerfile-ubuntu-gnome`
+	`sudo docker run -it -d -p 5901:5901 darkdragon-001/dockerfile-ubuntu-gnome`
 
 #### Connecting to instance
 
