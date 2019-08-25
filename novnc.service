@@ -1,0 +1,12 @@
+[Unit]
+Description=noVNC remote desktop server
+After=tigervnc.service
+ 
+[Service]
+Type=dbus
+ExecStart=/usr/share/novnc/utils/launch.sh --vnc localhost:5901 --listen 6901
+User=default
+Type=forking
+ 
+[Install]
+WantedBy=graphical.target

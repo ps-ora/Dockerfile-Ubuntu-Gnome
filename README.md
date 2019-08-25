@@ -1,7 +1,7 @@
 ## Ubuntu Desktop (GNOME 3) Dockerfile
 
 
-This repository contains the *Dockerfile* and *associated files* for setting up a container with Ubuntu, GNOME and TigerVNC.
+This repository contains the *Dockerfile* and *associated files* for setting up a container with Ubuntu, GNOME 3, TigerVNC and noVNC.
 
 * The VNC Server currently defaults to 1366*768 24bit.
 
@@ -20,7 +20,7 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
         --tmpfs /run --tmpfs /run/lock --tmpfs /tmp \
         --cap-add SYS_ADMIN --security-opt apparmor:unconfined \
         -v /sys/fs/cgroup:/sys/fs/cgroup \
-        -p 5901:5901 \
+        -p 5901:5901 -p 6901:6901 \
         darkdragon001/ubuntu-gnome-vnc`
 
 * Open (root) shell:
@@ -37,7 +37,10 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
 
 #### Connecting to instance
 
-* Connect to `vnc://<host>:5901` via your VNC client. currently the password is hardcoded to "acoman"
+* Connect to `vnc://<host>:5901` via your VNC client.
+* Connect to `http://<host>:6901` via your web browser.
+
+_**NOTE** The password is hardcoded to `acoman`._
 
 #### Using the desktop
 
