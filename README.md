@@ -1,59 +1,51 @@
-## Ubuntu Desktop (GNOME) Dockerfile
+## Ubuntu Desktop (GNOME 3) Dockerfile
 
 
-This repository contains the *Dockerfile* and *associated files* for setting up a container with Ubuntu, GNOME and TigerVNC for [Docker](https://www.docker.io/).
+This repository contains the *Dockerfile* and *associated files* for setting up a container with Ubuntu, GNOME and TigerVNC.
 
 * The VNC Server currently defaults to 1366*768 24bit.
 
 ### Dependencies
 
-* [ubuntu:19.04](https://hub.docker.com/_/ubuntu)
-
-
-### Installation
-
-1. Install [Docker](https://www.docker.io/).
-
-	For an Ubuntu 18.04 host the following commands will get you up and running:
-
-	`#install docker-ce from Docker official site step by step`
-
-
-2. You can then pull the file:
-
-	`sudo docker pull darkdragon-001/dockerfile-ubuntu-gnome`
-
-
-	Or alternatively build an image from the Dockerfile:
-
-	`sudo docker build -t="darkdragon-001/dockerfile-ubuntu-gnome" github.com/darkdragon-001/Dockerfile-Ubuntu-Gnome`
+* [ubuntu:19.10](https://hub.docker.com/_/ubuntu)
 
 
 ### Usage
 
-#### Starting
+#### Container actions
 
-* Change the port number to run multiple instances on the same host (remeber to open the ports for tcp ingress)
+* Start container:
 
-* this will run and drop you into a session:
+      sudo docker run --name=ubuntu-gnome -it -d --rm \
+        --tmpfs /run --tmpfs /run/lock --tmpfs /tmp \
+        --cap-add SYS_ADMIN --security-opt apparmor:unconfined \
+        -v /sys/fs/cgroup:/sys/fs/cgroup \
+        -p 5901:5901 \
+        darkdragon001/ubuntu-gnome-vnc`
 
-	`sudo docker run -it --rm -p 5901:5901 darkdragon-001/dockerfile-ubuntu-gnome`
+* Open (root) shell:
 
-* or for silent running:
+      sudo docker exec -it ubuntu-gnome bash
 
-	`sudo docker run -it -d -p 5901:5901 darkdragon-001/dockerfile-ubuntu-gnome`
+* Open shell as user:
+
+      sudo docker exec -it -u default ubuntu-gnome bash
+
+* Stop container:
+
+      sudo docker stop ubuntu-gnome
 
 #### Connecting to instance
 
 * Connect to `vnc://<host>:5901` via your VNC client. currently the password is hardcoded to "acoman"
 
-#### Notes
+#### Using the desktop
 
-* You can use the following command from within the container to kill the vnc server:
+* Gain root access via `sudo`
 
-	`USER=root vncserver -kill :1`
 
-* Then run the following command from within the container to restart start the vnc server, the flags are optional but pretty self explanatory.
+### Known issues
 
-	`USER=root vncserver :1 -geometry 1024x768 -depth 24`
-
+* Sidebar/dock hidden by default
+* Settings panel not working
+* User switching / gdm3 not working

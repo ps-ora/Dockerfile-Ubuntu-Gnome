@@ -1,0 +1,11 @@
+[Unit]
+Description=TigerVNC remote desktop server
+ 
+[Service]
+Type=dbus
+ExecStart=/usr/bin/tigervncserver :1 -geometry 1366x768 -depth 24 -localhost no
+User=default
+Type=forking
+ 
+[Install]
+WantedBy=graphical.target
