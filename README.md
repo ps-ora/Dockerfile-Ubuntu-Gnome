@@ -21,7 +21,7 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
         --cap-add SYS_ADMIN --security-opt apparmor:unconfined \
         -v /sys/fs/cgroup:/sys/fs/cgroup \
         -p 5901:5901 -p 6901:6901 \
-        darkdragon001/ubuntu-gnome-vnc`
+        darkdragon001/ubuntu-gnome-vnc
 
 * Open (root) shell:
 
@@ -50,5 +50,8 @@ _**NOTE** The password is hardcoded to `acoman`._
 ### Known issues
 
 * Sidebar/dock hidden by default
-* Settings panel not working
 * User switching / gdm3 not working
+
+### Not tested
+
+* Sound (PulseAudio)

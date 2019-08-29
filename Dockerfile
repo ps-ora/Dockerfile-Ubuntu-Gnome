@@ -3,9 +3,17 @@ FROM ubuntu:19.10
 ENV container docker
 ENV DEBIAN_FRONTEND noninteractive
 
-# Install systemd
+# Install locale
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    locales && \
+    echo "$LANG UTF-8" >> /etc/locale.gen && \
+    locale-gen && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install systemd
 RUN apt-get update && apt-get install -y \
     dbus dbus-x11 systemd && \
     apt-get clean && \
@@ -19,11 +27,12 @@ STOPSIGNAL SIGRTMIN+3
 CMD [ "/sbin/init" ]
 
 # Install GNOME
-# NOTE if you want plain gnome, use: apt-get install -y --no-install-recommends gnome-shell gnome-terminal
+# NOTE if you want plain gnome, use: apt-get install -y --no-install-recommends gnome-session gnome-terminal and remove the modification of /etc/gdm3/custom.conf
 RUN apt-get update \
-  && apt-get install -y ubuntu-desktop \
+  && apt-get install -y ubuntu-desktop fcitx-config-gtk gnome-tweak-tool gnome-usage \
   && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \
+  && sed -i 's/\[daemon\]/[daemon]\nInitialSetupEnable=false/' /etc/gdm3/custom.conf
 
 # Install TigerVNC server
 # TODO set VNC port in service file > exec command

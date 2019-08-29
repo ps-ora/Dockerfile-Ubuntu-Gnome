@@ -8,6 +8,4 @@ unset DBUS_SESSION_BUS_ADDRESS
 [ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
 [ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
 vncconfig -iconic &
-# TODO use this line but hide first start wizard
-#dbus-launch --exit-with-session gnome-session &
-gnome-shell --sm-disable &
+dbus-launch --exit-with-session gnome-session &
