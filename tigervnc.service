@@ -1,11 +1,13 @@
 [Unit]
-Description=TigerVNC remote desktop server
+Description=TigerVNC remote desktop service
+After=syslog.target network.target
  
 [Service]
-Type=dbus
-ExecStart=/usr/bin/tigervncserver :1 -geometry 1366x768 -depth 24 -localhost no
+Type=simple
 User=default
-Type=forking
+PAMName=login
+PIDFile=/home/default/.vnc/%H%i.pid
+ExecStart=/usr/bin/vncserver %i -geometry 1366x768 -depth 24 -localhost no
  
 [Install]
-WantedBy=graphical.target
+WantedBy=multi-user.target

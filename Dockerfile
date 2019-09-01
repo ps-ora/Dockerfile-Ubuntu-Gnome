@@ -42,20 +42,25 @@ RUN apt-get update \
   && apt-get install -y tigervnc-common tigervnc-scraping-server tigervnc-standalone-server tigervnc-viewer tigervnc-xorg-extension \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
-# TODO add ExecStop as: vncserver -kill :1
+# TODO fix PID problem: Type=forking would be best, but system daemon is run as root on startup
+#   ERROR tigervnc@:1.service: New main PID 233 does not belong to service, and PID file is not owned by root. Refusing.
+#   https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=
+#   https://www.freedesktop.org/software/systemd/man/systemd.unit.html#Specifiers
+#   https://wiki.archlinux.org/index.php/TigerVNC#Starting_and_stopping_vncserver_via_systemd
+# TODO when PID problem is resolved, add "ExecStop=/usr/bin/vncserver -kill %i"
 # TODO specify options like geometry as environment variables -> source variables in service via EnvironmentFile=/path/to/env
-COPY tigervnc.service /etc/systemd/system/tigervnc.service
-RUN systemctl enable tigervnc
+# TODO how to stop container once gnome-session terminates? does this terminate tigervnc.service?
+COPY tigervnc.service /etc/systemd/system/tigervnc@:1.service
+RUN systemctl enable tigervnc@:1
 EXPOSE 5901
 
 # Install noVNC
 # TODO novnc depends on net-tools until version 1.1.0: https://github.com/novnc/noVNC/issues/1075
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN apt-get update && apt-get install -y \
     net-tools novnc \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 RUN ln -s /usr/share/novnc/vnc_lite.html /usr/share/novnc/index.html
-# TODO check Type=forking correct? -> maybe better use Type=simple?
 # TODO specify options like ports as environment variables -> source variables in service via EnvironmentFile=/path/to/env
 COPY novnc.service /etc/systemd/system/novnc.service
 RUN systemctl enable novnc
