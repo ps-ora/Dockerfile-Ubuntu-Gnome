@@ -16,9 +16,9 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
 
 * Start container:
 
-      sudo docker run --name=ubuntu-gnome -it -d --rm \
+      sudo docker run --name=ubuntu-gnome -d --rm \
         --tmpfs /run --tmpfs /run/lock --tmpfs /tmp \
-        --cap-add SYS_ADMIN --security-opt apparmor:unconfined \
+        --cap-add SYS_BOOT \
         -v /sys/fs/cgroup:/sys/fs/cgroup \
         -p 5901:5901 -p 6901:6901 \
         darkdragon001/ubuntu-gnome-vnc
