@@ -47,10 +47,10 @@ RUN apt-get update \
 #   https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=
 #   https://www.freedesktop.org/software/systemd/man/systemd.unit.html#Specifiers
 #   https://wiki.archlinux.org/index.php/TigerVNC#Starting_and_stopping_vncserver_via_systemd
-# TODO when PID problem is resolved, add "ExecStop=/usr/bin/vncserver -kill %i"
+# -> this should be fixed by official systemd file once released: https://github.com/TigerVNC/tigervnc/pull/838
 # TODO specify options like geometry as environment variables -> source variables in service via EnvironmentFile=/path/to/env
-# TODO how to stop container once gnome-session terminates? does this terminate tigervnc.service?
-COPY tigervnc.service /etc/systemd/system/tigervnc@:1.service
+# NOTE logout will stop tigervnc service -> need to manually start (gdm for graphical login is not working)
+COPY tigervnc@.service /etc/systemd/system/tigervnc@.service
 RUN systemctl enable tigervnc@:1
 EXPOSE 5901
 
