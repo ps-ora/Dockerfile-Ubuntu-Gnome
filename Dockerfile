@@ -84,7 +84,6 @@ WORKDIR "/home/${USER}"
 RUN mkdir -p $HOME/.vnc
 COPY xstartup $HOME/.vnc/xstartup
 RUN echo "acoman" | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
-# TODO hide vnc config dialog
 
 # switch back to root to start systemd
 USER root
