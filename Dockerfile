@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
 RUN systemctl disable systemd-resolved
 VOLUME ["/sys/fs/cgroup"]
 STOPSIGNAL SIGRTMIN+3
+# TODO entrypoint.sh script -> create config file based on ENV variables
 CMD [ "/sbin/init" ]
 
 # Install GNOME
@@ -35,23 +36,20 @@ RUN apt-get update \
   && sed -i 's/\[daemon\]/[daemon]\nInitialSetupEnable=false/' /etc/gdm3/custom.conf
 
 # Install TigerVNC server
-# TODO set VNC port in service file > exec command
-# TODO check if it works with default config file
 # NOTE tigervnc because of XKB extension: https://github.com/i3/i3/issues/1983
+# TODO wait for release: https://github.com/TigerVNC/tigervnc/pull/838
 RUN apt-get update \
-  && apt-get install -y tigervnc-common tigervnc-scraping-server tigervnc-standalone-server tigervnc-viewer tigervnc-xorg-extension \
+  && apt-get install -y wget xinit \
+  && wget https://www.cendio.com/~ossman/tigervnc_systemd/bionic/tigervncserver_1.10.80-1ubuntu1_amd64.deb \
+  && apt-get install -y ./tigervncserver_1.10.80-1ubuntu1_amd64.deb \
+  && rm -f ./tigervncserver_1.10.80-1ubuntu1_amd64.deb \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
-# TODO fix PID problem: Type=forking would be best, but system daemon is run as root on startup
-#   ERROR tigervnc@:1.service: New main PID 233 does not belong to service, and PID file is not owned by root. Refusing.
-#   https://www.freedesktop.org/software/systemd/man/systemd.service.html#Type=
-#   https://www.freedesktop.org/software/systemd/man/systemd.unit.html#Specifiers
-#   https://wiki.archlinux.org/index.php/TigerVNC#Starting_and_stopping_vncserver_via_systemd
-# -> this should be fixed by official systemd file once released: https://github.com/TigerVNC/tigervnc/pull/838
-# TODO specify options like geometry as environment variables -> source variables in service via EnvironmentFile=/path/to/env
 # NOTE logout will stop tigervnc service -> need to manually start (gdm for graphical login is not working)
-COPY tigervnc@.service /etc/systemd/system/tigervnc@.service
-RUN systemctl enable tigervnc@:1
+# -> TODO check if new TigerVNC also has this problem
+# TODO add line (via sed?) with ARG ${USER}
+COPY vncserver.users /etc/tigervnc/vncserver.users
+RUN systemctl enable vncserver@:1
 EXPOSE 5901
 
 # Install noVNC
@@ -82,9 +80,10 @@ WORKDIR "/home/${USER}"
 
 # Set up VNC
 RUN mkdir -p $HOME/.vnc
-COPY xstartup $HOME/.vnc/xstartup
+# TODO specify options like geometry as environment variables
+# TODO set VNC port in config file -> adapt EXPOSE command
+COPY config $HOME/.vnc/config
 RUN echo "acoman" | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
-# TODO hide vnc config dialog
 
 # switch back to root to start systemd
 USER root
