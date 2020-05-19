@@ -7,7 +7,7 @@ This repository contains the *Dockerfile* and *associated files* for setting up 
 
 ### Dependencies
 
-* [ubuntu:19.10](https://hub.docker.com/_/ubuntu)
+* [ubuntu:20.04](https://hub.docker.com/_/ubuntu)
 
 
 ### Usage
