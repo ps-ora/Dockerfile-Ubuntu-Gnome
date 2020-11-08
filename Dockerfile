@@ -71,7 +71,7 @@ EXPOSE 6901
 # NOTE alternative is to use libnss_switch and create user at runtime -> use entrypoint script
 ARG UID=1000
 ARG USER=ubt
-ARG PASS=operator
+ARG PASS=operator1
 RUN useradd ${USER} -u ${UID} -U -d /home/${USER} -m -s /bin/bash
 RUN apt-get update && apt-get install -y sudo && apt-get clean && rm -rf /var/lib/apt/lists/* && \
     echo "${USER} ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/${USER}" && \
