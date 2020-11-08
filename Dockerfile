@@ -70,7 +70,7 @@ EXPOSE 6901
 # NOTE user hardcoded in tigervnc.service
 # NOTE alternative is to use libnss_switch and create user at runtime -> use entrypoint script
 ARG UID=1000
-ARG USER=operator
+ARG USER=ubt
 ARG PASS=operator
 RUN useradd ${USER} -u ${UID} -U -d /home/${USER} -m -s /bin/bash
 RUN apt-get update && apt-get install -y sudo && apt-get clean && rm -rf /var/lib/apt/lists/* && \
@@ -84,7 +84,7 @@ WORKDIR "/home/${USER}"
 # Set up VNC
 RUN mkdir -p $HOME/.vnc
 COPY xstartup $HOME/.vnc/xstartup
-RUN echo ${USER} | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
+RUN echo ${PASS} | vncpasswd -f >> $HOME/.vnc/passwd && chmod 600 $HOME/.vnc/passwd
 
 # switch back to root to start systemd
 USER root
